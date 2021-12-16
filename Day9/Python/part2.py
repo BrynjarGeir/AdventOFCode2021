@@ -1,4 +1,4 @@
-#þarf að gera þetta aftur
+#þarf að gera þetta aftur eða gera þetta þessi af reddit gerði þetta neelakantankk
 
 from collections import namedtuple
 from queue import Queue
