@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>part2.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "Day5\\Python\\part2.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>part2.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> pprint
+
+x1, x2, y1, y2 = [], [], [], []
+
+<span class="hljs-keyword">with</span> open(<span class="hljs-string">'input'</span>) <span class="hljs-keyword">as</span> f:
+    lines = f.readlines()
+    <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> lines:
+        line = line.strip().split(<span class="hljs-string">' -&gt; '</span>)
+        curr1 = line[<span class="hljs-number">0</span>].split(<span class="hljs-string">','</span>)
+        curr2 = line[<span class="hljs-number">1</span>].split(<span class="hljs-string">','</span>)
+        x1.append(int(curr1[<span class="hljs-number">0</span>]))
+        x2.append(int(curr2[<span class="hljs-number">0</span>]))
+        y1.append(int(curr1[<span class="hljs-number">1</span>]))
+        y2.append(int(curr2[<span class="hljs-number">1</span>]))
+
+data = np.transpose(np.array([x1, y1, x2, y2]), (<span class="hljs-number">1</span>,<span class="hljs-number">0</span>))
+
+minX = min(min(data[:, <span class="hljs-number">0</span>]), min(data[:,<span class="hljs-number">2</span>]))
+maxX = max(max(data[:, <span class="hljs-number">0</span>]), max(data[:,<span class="hljs-number">2</span>]))
+minY = min(min(data[:, <span class="hljs-number">1</span>]), min(data[:,<span class="hljs-number">3</span>]))
+maxY = max(max(data[:, <span class="hljs-number">1</span>]), max(data[:,<span class="hljs-number">3</span>]))
+
+grid = np.zeros(shape=(maxX+<span class="hljs-number">1</span>,maxY+<span class="hljs-number">1</span>), dtype=int)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">generateLine</span><span class="hljs-params">(line)</span>:</span>
+    <span class="hljs-keyword">if</span> line[<span class="hljs-number">0</span>] == line[<span class="hljs-number">2</span>] <span class="hljs-keyword">and</span> line[<span class="hljs-number">3</span>] &gt; line[<span class="hljs-number">1</span>]:
+        points = [(line[<span class="hljs-number">0</span>], y) <span class="hljs-keyword">for</span> y <span class="hljs-keyword">in</span> list(range(line[<span class="hljs-number">1</span>], line[<span class="hljs-number">3</span>] + <span class="hljs-number">1</span>))]
+    <span class="hljs-keyword">elif</span> line[<span class="hljs-number">0</span>] == line[<span class="hljs-number">2</span>]:
+        points = [(line[<span class="hljs-number">0</span>], y) <span class="hljs-keyword">for</span> y <span class="hljs-keyword">in</span> list(range(line[<span class="hljs-number">3</span>], line[<span class="hljs-number">1</span>] + <span class="hljs-number">1</span>))]
+    <span class="hljs-keyword">elif</span> line[<span class="hljs-number">1</span>] == line[<span class="hljs-number">3</span>] <span class="hljs-keyword">and</span> line[<span class="hljs-number">2</span>] &gt; line[<span class="hljs-number">0</span>]:
+        points = [(x, line[<span class="hljs-number">1</span>]) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> list(range(line[<span class="hljs-number">0</span>], line[<span class="hljs-number">2</span>] + <span class="hljs-number">1</span>))]
+    <span class="hljs-keyword">elif</span> line[<span class="hljs-number">1</span>] == line[<span class="hljs-number">3</span>]:
+        points = [(x, line[<span class="hljs-number">1</span>]) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> list(range(line[<span class="hljs-number">2</span>], line[<span class="hljs-number">0</span>] + <span class="hljs-number">1</span>))]
+    <span class="hljs-keyword">elif</span> abs(line[<span class="hljs-number">3</span>] - line[<span class="hljs-number">1</span>]) == abs(line[<span class="hljs-number">2</span>] - line[<span class="hljs-number">0</span>]):
+        maxY, minY = max(line[<span class="hljs-number">3</span>], line[<span class="hljs-number">1</span>]), min(line[<span class="hljs-number">3</span>], line[<span class="hljs-number">1</span>])
+        maxX, minX = max(line[<span class="hljs-number">2</span>], line[<span class="hljs-number">0</span>]), min(line[<span class="hljs-number">2</span>], line[<span class="hljs-number">0</span>])
+        revX = line[<span class="hljs-number">2</span>] &lt; line[<span class="hljs-number">0</span>]
+        revY = line[<span class="hljs-number">3</span>] &lt; line[<span class="hljs-number">1</span>]
+        x = list(range(minX, maxX+<span class="hljs-number">1</span>))
+        y = list(range(minY, maxY+<span class="hljs-number">1</span>))
+        <span class="hljs-keyword">if</span> revY: y.reverse()
+        <span class="hljs-keyword">if</span> revX: x.reverse()
+        points = []
+        <span class="hljs-keyword">for</span> idx, val <span class="hljs-keyword">in</span> enumerate(x):
+            points.append((list(x)[idx], list(y)[idx]))
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span>
+    <span class="hljs-keyword">return</span> points
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">markGrid</span><span class="hljs-params">(grid, points)</span>:</span>
+    <span class="hljs-keyword">for</span> point <span class="hljs-keyword">in</span> points:
+        grid[point[<span class="hljs-number">1</span>]][point[<span class="hljs-number">0</span>]] += <span class="hljs-number">1</span>
+    <span class="hljs-keyword">return</span> grid
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">markLines</span><span class="hljs-params">(grid, data)</span>:</span>
+    <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> data:
+        points = generateLine(line)
+        <span class="hljs-keyword">if</span> points != <span class="hljs-literal">None</span>:
+            grid = markGrid(grid, points)
+    <span class="hljs-keyword">return</span> grid
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">countMoreThanValue</span><span class="hljs-params">(grid, value)</span>:</span>
+    count = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> grid:
+        <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> line:
+            <span class="hljs-keyword">if</span> item &gt;= value:
+                count += <span class="hljs-number">1</span>
+    <span class="hljs-keyword">return</span> count
+
+grid = markLines(grid, data)
+
+pprint.pprint(grid)
+
+count = countMoreThanValue(grid, <span class="hljs-number">2</span>)
+
+print(<span class="hljs-string">'The number of values at or above 2 is: '</span>, count)
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

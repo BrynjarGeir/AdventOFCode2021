@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>part2.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "Day14\\python\\part2.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>part2.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> Counter, deque
+
+lines = open(<span class="hljs-string">'input'</span>).readlines()
+lines = [line.strip().split(<span class="hljs-string">' -&gt; '</span>) <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> lines]
+
+template = deque(lines[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>])
+rules = {}
+<span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> lines[<span class="hljs-number">2</span>:]:
+    rules[line[<span class="hljs-number">0</span>]] = line[<span class="hljs-number">1</span>]
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">solve</span><span class="hljs-params">(template, pairs, steps)</span>:</span>
+    <span class="hljs-keyword">for</span> step <span class="hljs-keyword">in</span> range(steps+<span class="hljs-number">1</span>):
+        <span class="hljs-keyword">if</span> step == steps:
+            letters = Counter()
+            <span class="hljs-keyword">for</span> pair <span class="hljs-keyword">in</span> pairs:
+                print(pairs[pair])
+                letters[pair[<span class="hljs-number">0</span>]] += pairs[pair]
+            letters[template[<span class="hljs-number">-1</span>]] += <span class="hljs-number">1</span>
+            <span class="hljs-keyword">return</span> max(letters.values()) - min(letters.values())
+        new_pairs = Counter()
+        <span class="hljs-keyword">for</span> pair <span class="hljs-keyword">in</span> rules:
+            new_pairs[pair[<span class="hljs-number">0</span>] + rules[pair]] += pairs[pair]
+            new_pairs[rules[pair] + pair[<span class="hljs-number">1</span>]] += pairs[pair]
+        pairs = new_pairs 
+
+steps = <span class="hljs-number">40</span>; pairs = Counter()
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(len(template) - <span class="hljs-number">1</span>):
+    pairs[template[i] + template[i+<span class="hljs-number">1</span>]] += <span class="hljs-number">1</span>
+
+diff = solve(template, pairs, steps)
+
+print(diff)
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

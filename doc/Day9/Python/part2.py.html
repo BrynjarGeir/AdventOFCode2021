@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>part2.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "Day9\\Python\\part2.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>part2.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+<p>þarf að gera þetta aftur eða gera þetta þessi af reddit gerði þetta neelakantankk</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">
+<span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> namedtuple
+<span class="hljs-keyword">from</span> queue <span class="hljs-keyword">import</span> Queue
+<span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> perf_counter_ns
+
+<span class="hljs-keyword">from</span> pprint <span class="hljs-keyword">import</span> pprint
+
+Point = namedtuple(<span class="hljs-string">'Point'</span>,[<span class="hljs-string">'x_pos'</span>,<span class="hljs-string">'y_pos'</span>])
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_neighbors</span><span class="hljs-params">(pos,max_rows,max_cols)</span>:</span>
+    directions = [(<span class="hljs-number">0</span>,<span class="hljs-number">1</span>),(<span class="hljs-number">1</span>,<span class="hljs-number">0</span>),(<span class="hljs-number">-1</span>,<span class="hljs-number">0</span>),(<span class="hljs-number">0</span>,<span class="hljs-number">-1</span>)]
+    result = []
+
+    <span class="hljs-keyword">for</span> direction <span class="hljs-keyword">in</span> directions:
+        neighbor = Point(pos.x_pos + direction[<span class="hljs-number">0</span>], pos.y_pos + direction[<span class="hljs-number">1</span>])
+        <span class="hljs-keyword">if</span> <span class="hljs-number">0</span> &lt;= neighbor.x_pos &lt; max_cols <span class="hljs-keyword">and</span> <span class="hljs-number">0</span> &lt;= neighbor.y_pos &lt; max_rows:
+            result.append(neighbor)
+    <span class="hljs-keyword">return</span> result
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">is_lower</span><span class="hljs-params">(pos,heights,max_rows,max_cols)</span>:</span>
+    adjacents = get_neighbors(pos, max_rows, max_cols)
+    adjacent_heights = [heights[pos] <span class="hljs-keyword">for</span> pos <span class="hljs-keyword">in</span> adjacents]
+    <span class="hljs-keyword">for</span> height <span class="hljs-keyword">in</span> adjacent_heights:
+        <span class="hljs-keyword">if</span> heights[pos] &gt;= height:
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_basin_size</span><span class="hljs-params">(pos, heights, nines, max_rows, max_cols)</span>:</span>
+    frontier = Queue()
+    frontier.put(pos)
+    reached = set()
+    reached.add(pos)
+
+    <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> frontier.empty():
+        current = frontier.get()
+        <span class="hljs-keyword">for</span> neighbor <span class="hljs-keyword">in</span> get_neighbors(current,max_rows, max_cols):
+            <span class="hljs-keyword">if</span> neighbor <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> reached <span class="hljs-keyword">and</span> neighbor <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> nines:
+                frontier.put(neighbor)
+                reached.add(neighbor)
+    <span class="hljs-keyword">return</span> len(reached)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>:</span>
+
+    START = perf_counter_ns()
+    
+    <span class="hljs-keyword">with</span> open(<span class="hljs-string">'input'</span>,<span class="hljs-string">'r'</span>) <span class="hljs-keyword">as</span> infile:
+        heights = {Point(x_pos,y_pos):int(height) <span class="hljs-keyword">for</span> y_pos,line <span class="hljs-keyword">in</span> enumerate(infile.readlines()) <span class="hljs-keyword">for</span> x_pos,height <span class="hljs-keyword">in</span> enumerate(line.strip())}
+        infile.seek(<span class="hljs-number">0</span>)
+        max_rows = len([line <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> infile.readlines()])
+        infile.seek(<span class="hljs-number">0</span>)
+        max_cols = len(infile.readline().strip())
+    
+    low_points = set()
+    nines = set()
+    all_points = set(heights.keys())
+    
+    <span class="hljs-keyword">for</span> pos, height <span class="hljs-keyword">in</span> heights.items():
+        <span class="hljs-keyword">if</span> height == <span class="hljs-number">9</span>:
+            nines.add(pos)
+        <span class="hljs-keyword">elif</span> is_lower(pos, heights, max_rows, max_cols):        
+            low_points.add(pos)
+
+    basin_sizes = []
+    <span class="hljs-keyword">for</span> low_point <span class="hljs-keyword">in</span> low_points:
+        basin_size = get_basin_size(low_point, heights, nines, max_rows, max_cols)
+        basin_sizes.append(basin_size)
+
+    basin_sizes.sort(reverse=<span class="hljs-literal">True</span>)
+    total = <span class="hljs-number">1</span>
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> (<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>):
+        total *= basin_sizes[i]
+
+    print(total)
+
+
+
+    STOP = perf_counter_ns()
+    print(<span class="hljs-string">f"Time taken: <span class="hljs-subst">{STOP - START}</span> nanoseconds"</span>)
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    main()
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

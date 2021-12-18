@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>part1.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "Day13\\python\\part1.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>part1.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">input = [<span class="hljs-string">'input'</span>, <span class="hljs-string">'example'</span>]
+
+lines = [line.strip() <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> open(input[<span class="hljs-number">0</span>]).readlines()]
+
+idx = lines.index(<span class="hljs-string">''</span>)
+
+dots = lines[:idx]
+folds = lines[idx+<span class="hljs-number">1</span>:]
+
+tmpDots = set()
+maxX = <span class="hljs-number">0</span>; maxY = <span class="hljs-number">0</span>
+<span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> dots:
+    item = item.split(<span class="hljs-string">','</span>)
+    x,y = int(item[<span class="hljs-number">0</span>]), int(item[<span class="hljs-number">1</span>])
+    <span class="hljs-keyword">if</span> x &gt; maxX: maxX = x
+    <span class="hljs-keyword">if</span> y &gt; maxY: maxY = y
+    tmpDots.add((x,y))
+
+dots = tmpDots
+
+tmpFolds = []
+<span class="hljs-keyword">for</span> fold <span class="hljs-keyword">in</span> folds:
+    item = fold.split(<span class="hljs-string">'='</span>)
+    tmpFolds.append((item[<span class="hljs-number">0</span>][<span class="hljs-number">-1</span>], int(item[<span class="hljs-number">1</span>])))
+folds = tmpFolds
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">projectPointsX</span><span class="hljs-params">(dots, maxX, maxY)</span>:</span>
+    middleLine = int(maxX / <span class="hljs-number">2</span>)
+    print(maxX, middleLine)
+    tmpDots = set()
+    <span class="hljs-keyword">for</span> dot <span class="hljs-keyword">in</span> dots:
+        <span class="hljs-keyword">if</span> dot[<span class="hljs-number">0</span>] &gt; middleLine:
+            tmpDots.add((maxX-dot[<span class="hljs-number">0</span>],dot[<span class="hljs-number">1</span>]))
+        <span class="hljs-keyword">else</span>:
+            tmpDots.add(dot)
+    maxX = int(maxX/<span class="hljs-number">2</span>)
+    dots = tmpDots
+    <span class="hljs-keyword">return</span> dots, maxX, maxY
+
+
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">projectPointsY</span><span class="hljs-params">(dots, maxX, maxY)</span>:</span>
+    middleLine = int(maxY / <span class="hljs-number">2</span>)
+    print(maxY, middleLine)
+    tmpDots = set()
+    <span class="hljs-keyword">for</span> dot <span class="hljs-keyword">in</span> dots:
+        <span class="hljs-keyword">if</span> dot[<span class="hljs-number">1</span>] &gt; middleLine:
+            tmpDots.add((dot[<span class="hljs-number">0</span>], maxY-dot[<span class="hljs-number">1</span>]))
+        <span class="hljs-keyword">else</span>:
+            tmpDots.add(dot)
+    maxY = int(maxY / <span class="hljs-number">2</span>)
+    dots = tmpDots
+    <span class="hljs-keyword">return</span> dots, maxX, maxY
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">projectPoints</span><span class="hljs-params">(dots, fold, maxX, maxY)</span>:</span>
+    <span class="hljs-keyword">if</span> fold[<span class="hljs-number">0</span>] == <span class="hljs-string">'y'</span>: <span class="hljs-keyword">return</span> projectPointsY(dots, maxX, maxY)
+    <span class="hljs-keyword">else</span>: <span class="hljs-keyword">return</span> projectPointsX(dots, maxX, maxY)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">everyFold</span><span class="hljs-params">(dots, folds, maxX, maxY)</span>:</span>
+    <span class="hljs-keyword">for</span> fold <span class="hljs-keyword">in</span> folds:
+        print(fold)
+        dots, maxX, maxY = projectPoints(dots, fold, maxX, maxY)
+    <span class="hljs-keyword">return</span> dots, maxX, maxY
+
+dots, maxX, maxY = everyFold(dots, folds, maxX, maxY)
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>check.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "Day13\\python\\check.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>check.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">import</span> sys
+sys.stdout = open(<span class="hljs-string">'output.txt'</span>, <span class="hljs-string">'w'</span>)
+sys.stdin = open(<span class="hljs-string">'input'</span>)
+
+data = sys.stdin.read().splitlines()
+data = [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> data <span class="hljs-keyword">if</span> i]
+xs, ys = [], []
+grid = set()
+folds = []
+<span class="hljs-keyword">for</span> s <span class="hljs-keyword">in</span> data:
+    <span class="hljs-keyword">if</span> s[<span class="hljs-number">0</span>].isdigit():
+        y, x = map(int, s.split(<span class="hljs-string">','</span>))
+        xs.append(x)
+        ys.append(y)
+        grid.add((x, y))
+    <span class="hljs-keyword">else</span>:
+        a = s.split()
+        folds.append(a[<span class="hljs-number">2</span>])
+n, m = max(xs) + <span class="hljs-number">1</span>, max(ys) + <span class="hljs-number">1</span>
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>For Part 1, change len(folds) to 1
+Part 2</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(len(folds)):
+    fold = folds[i]
+    axis, value = fold.split(<span class="hljs-string">'='</span>)
+    value = int(value)
+    <span class="hljs-keyword">if</span> axis == <span class="hljs-string">'y'</span>:
+        <span class="hljs-keyword">for</span> row <span class="hljs-keyword">in</span> range(value + <span class="hljs-number">1</span>, n):
+            <span class="hljs-keyword">for</span> col <span class="hljs-keyword">in</span> range(m):
+                <span class="hljs-keyword">if</span> (row, col) <span class="hljs-keyword">in</span> grid:
+                    grid.remove((row, col))
+                    diff = row - value
+                    grid.add((row - <span class="hljs-number">2</span> * diff, col))
+        n = value
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">for</span> row <span class="hljs-keyword">in</span> range(n):
+            <span class="hljs-keyword">for</span> col <span class="hljs-keyword">in</span> range(value + <span class="hljs-number">1</span>, m):
+                <span class="hljs-keyword">if</span> (row, col) <span class="hljs-keyword">in</span> grid:
+                    grid.remove((row, col))
+                    diff = col - value
+                    grid.add((row, col - <span class="hljs-number">2</span> * diff))
+        m = value
+print(len(grid))
+xs = [i[<span class="hljs-number">0</span>] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> grid]
+ys = [i[<span class="hljs-number">1</span>] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> grid]
+matrix = [[<span class="hljs-string">'.'</span> <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(m)] <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(n)]
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(max(xs) + <span class="hljs-number">1</span>):
+    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> range(max(ys) + <span class="hljs-number">1</span>):
+        <span class="hljs-keyword">if</span> (i, j) <span class="hljs-keyword">in</span> grid:
+            matrix[i][j] = <span class="hljs-string">'#'</span>
+<span class="hljs-keyword">for</span> row <span class="hljs-keyword">in</span> matrix:
+    print(<span class="hljs-string">''</span>.join(row))
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

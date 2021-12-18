@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>part2.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "Day7\\python\\part2.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>part2.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">from</span> numpy.core.numeric <span class="hljs-keyword">import</span> Inf
+
+txt = <span class="hljs-string">'input'</span>
+<span class="hljs-keyword">with</span> open(txt) <span class="hljs-keyword">as</span> f:
+    line = f.readline()
+    line = line.strip().split(<span class="hljs-string">','</span>)
+    line = [int(x) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> line]
+
+crabs = np.array(line)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">checkFuelCost</span><span class="hljs-params">(crabs, target)</span>:</span>
+    cost = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> crab <span class="hljs-keyword">in</span> crabs:
+        length = abs(crab - target)
+        curr = sum(range(<span class="hljs-number">1</span>,length+<span class="hljs-number">1</span>))
+        cost += curr
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>print('The cost for ', crab, ' is ', curr)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">    <span class="hljs-keyword">return</span> cost
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tryDifferentTargets</span><span class="hljs-params">(crabs)</span>:</span>
+    targets = range(max(crabs))
+    minCost = Inf
+    <span class="hljs-keyword">for</span> target <span class="hljs-keyword">in</span> targets:
+        cost = checkFuelCost(crabs, target)
+        <span class="hljs-keyword">if</span> cost &lt; minCost:
+            minCost = cost
+    <span class="hljs-keyword">return</span> minCost
+
+
+cost = tryDifferentTargets(crabs)
+
+print(<span class="hljs-string">'The total cost is '</span>, cost)
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

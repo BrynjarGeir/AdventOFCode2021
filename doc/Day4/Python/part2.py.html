@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>part2.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "Day4\\Python\\part2.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>part2.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">from</span> re <span class="hljs-keyword">import</span> search
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">from</span> pprint <span class="hljs-keyword">import</span> pprint
+
+txt = <span class="hljs-string">'input'</span>
+<span class="hljs-keyword">with</span> open(txt) <span class="hljs-keyword">as</span> f:
+    tmp = f.readlines()
+    numbers = tmp[<span class="hljs-number">0</span>].strip().split(<span class="hljs-string">","</span>)
+    numbers = [int(x) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> numbers]
+    cards = []
+    <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> tmp[<span class="hljs-number">2</span>:]:
+        cards.append(item.strip().split())
+    tmp = []
+    tmpCards = []
+    <span class="hljs-keyword">for</span> idx, val <span class="hljs-keyword">in</span> enumerate(cards):
+        <span class="hljs-keyword">if</span> val == [] <span class="hljs-keyword">or</span> idx == (len(cards) - <span class="hljs-number">1</span>):
+            <span class="hljs-keyword">if</span> idx == len(cards) - <span class="hljs-number">1</span>:
+                tmp.append([int(x) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> val])
+            tmpCards.append(tmp)
+            tmp = []
+        <span class="hljs-keyword">else</span>:
+            tmp.append([int(x) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> val])
+
+cards = np.array(tmpCards)
+numbers = np.array(numbers)
+statuses = np.zeros_like(cards)
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>Check if specific card at index is a winner and append that winners index to winners
+and return the winners</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">checkCard</span><span class="hljs-params">(status, idx)</span>:</span>
+    <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> status:
+        <span class="hljs-keyword">if</span> all(line): 
+            <span class="hljs-keyword">return</span> idx
+    <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> np.transpose(status, (<span class="hljs-number">1</span>,<span class="hljs-number">0</span>)):
+        <span class="hljs-keyword">if</span> all(line): 
+            <span class="hljs-keyword">return</span> idx
+    <span class="hljs-keyword">return</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Check which cards are winners and return the indices of those winners</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">checkWinner</span><span class="hljs-params">(statuses)</span>:</span>
+    winners = []
+    <span class="hljs-keyword">for</span> idx, status <span class="hljs-keyword">in</span> enumerate(statuses):
+        curr = checkCard(status, idx)
+        <span class="hljs-keyword">if</span> curr != <span class="hljs-literal">None</span>:
+            winners.append(curr)
+    <span class="hljs-keyword">return</span> winners
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>Mark with a 1 (true) if a number is read that is on that card (assuming no duplicate numbers)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">markCard</span><span class="hljs-params">(card, status, number)</span>:</span>
+    <span class="hljs-keyword">for</span> idx, line <span class="hljs-keyword">in</span> enumerate(card):
+        <span class="hljs-keyword">for</span> i, n <span class="hljs-keyword">in</span> enumerate(line):
+            <span class="hljs-keyword">if</span> n == number:
+                status[idx, i] = <span class="hljs-number">1</span>
+    <span class="hljs-keyword">return</span> status
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>Mark all cards with a 1 (true) if a number is read that is on that card (assuming no duplicate numbers)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">markCards</span><span class="hljs-params">(cards, statuses, number)</span>:</span>
+    <span class="hljs-keyword">for</span> idx, status <span class="hljs-keyword">in</span> enumerate(statuses):
+        statuses[idx] = markCard(cards[idx], status, number)
+    <span class="hljs-keyword">return</span> statuses
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<p>Read all the numbers and mark the cards then check winner</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">readNumbers</span><span class="hljs-params">(cards, statuses, numbers)</span>:</span>
+    <span class="hljs-keyword">for</span> number <span class="hljs-keyword">in</span> numbers:
+        statuses = markCards(cards, statuses, number)
+        winners = checkWinner(statuses)
+        <span class="hljs-keyword">if</span> len(winners) == len(cards) - <span class="hljs-number">1</span>:
+            most_winners = winners
+        <span class="hljs-keyword">elif</span> len(winners) == len(cards):
+            <span class="hljs-keyword">return</span> winners, cards, number, most_winners
+    <span class="hljs-keyword">return</span> winners, cards, number, most_winners
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<p>Sum over all the unmarked numbers in a card</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">sumUnMarked</span><span class="hljs-params">(card, status)</span>:</span>
+    s = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> idx, line <span class="hljs-keyword">in</span> enumerate(status):
+        <span class="hljs-keyword">for</span> i, item <span class="hljs-keyword">in</span> enumerate(line):
+            <span class="hljs-keyword">if</span> item == <span class="hljs-number">0</span>:
+                s += card[idx][i]
+    <span class="hljs-keyword">return</span> s
+
+winners, cards, number, most_winners = readNumbers(cards, statuses, numbers)
+idxLoser = list(set(winners) - set(most_winners))[<span class="hljs-number">0</span>]
+s = sumUnMarked(cards[idxLoser], statuses[idxLoser])
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8"></a>
+</div>
+<p>if there are more than one winners then I will just take the first one</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">print(<span class="hljs-string">'The sum is: '</span>,s,<span class="hljs-string">' and the last number is '</span>,number)
+print(<span class="hljs-string">'The product is: '</span>, s * number, <span class="hljs-string">' and the losing card is number '</span>, idxLoser + <span class="hljs-number">1</span> )
+print(<span class="hljs-string">'The losing card should be '</span>, cards[idxLoser])
+print(<span class="hljs-string">'The losing status should be '</span>, statuses[idxLoser])
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

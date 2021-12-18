@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>part2.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "Day12\\python\\part2.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>part2.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">import</span> string
+<span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> deque
+lowercase = string.ascii_lowercase
+uppercase = string.ascii_uppercase
+
+txt = [<span class="hljs-string">'smallExample'</span>, <span class="hljs-string">'mediumExample'</span>, <span class="hljs-string">'largeExample'</span>, <span class="hljs-string">'input'</span>]
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>Setup up data</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">with</span> open(txt[<span class="hljs-number">3</span>]) <span class="hljs-keyword">as</span> f:
+    lines = f.readlines()
+    lines = [line.strip().split(<span class="hljs-string">'-'</span>) <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> lines]
+
+connections = {}
+<span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> lines:
+    connections[line[<span class="hljs-number">0</span>]] = set()
+    connections[line[<span class="hljs-number">1</span>]] = set()
+
+<span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> lines:
+    connections[line[<span class="hljs-number">0</span>]].add(line[<span class="hljs-number">1</span>])
+    connections[line[<span class="hljs-number">1</span>]].add(line[<span class="hljs-number">0</span>])
+
+keysConnections = connections.keys()
+bigCave = set()
+smallCave = set()
+<span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> keysConnections:
+    <span class="hljs-keyword">if</span> key <span class="hljs-keyword">in</span> lowercase: smallCave.add(key)
+    <span class="hljs-keyword">elif</span> key <span class="hljs-keyword">in</span> uppercase: bigCave.add(key)
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>End of data setup</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>Let's create</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">trace</span><span class="hljs-params">(map, boo)</span>:</span>
+    ct = <span class="hljs-number">0</span>
+    tracker = deque([(<span class="hljs-string">'start'</span>,set([<span class="hljs-string">'start'</span>]), <span class="hljs-literal">False</span>)])
+    <span class="hljs-keyword">while</span> tracker:
+        p, seen, visited = tracker.popleft()
+        <span class="hljs-keyword">if</span> p == <span class="hljs-string">'end'</span>:
+            ct += <span class="hljs-number">1</span>
+            <span class="hljs-keyword">continue</span>
+        <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> map[p]:
+            <span class="hljs-keyword">if</span> c <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> seen:
+                seen_cp = set(seen)
+                <span class="hljs-keyword">if</span> c.islower():
+                    seen_cp.add(c)
+                tracker.append((c, seen_cp, visited))
+            <span class="hljs-keyword">elif</span> c <span class="hljs-keyword">in</span> seen <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> visited <span class="hljs-keyword">and</span> c <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> [<span class="hljs-string">'start'</span>, <span class="hljs-string">'end'</span>] <span class="hljs-keyword">and</span> boo:
+                tracker.append((c, seen, c))
+    <span class="hljs-keyword">return</span> ct
+
+part2 = trace(connections, <span class="hljs-literal">True</span>)
+
+print(<span class="hljs-string">'The answer to part 2 is '</span>, part2, <span class="hljs-string">'!'</span>)
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

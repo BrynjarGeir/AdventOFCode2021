@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>part2.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "Day10\\python\\part2.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>part2.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">import</span> pprint
+
+txt = <span class="hljs-string">'input'</span>
+<span class="hljs-keyword">with</span> open(txt) <span class="hljs-keyword">as</span> f:
+    lines = [x.strip() <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> f.readlines()]
+    <span class="hljs-keyword">for</span> idx, line <span class="hljs-keyword">in</span> enumerate(lines):
+        lines[idx] = [item <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> line]
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>keeps track of how many errors of each type there are and the cost associated with each error</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">errorCost = {<span class="hljs-string">')'</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>], <span class="hljs-string">']'</span>:[<span class="hljs-number">57</span>,<span class="hljs-number">0</span>], <span class="hljs-string">'}'</span>:[<span class="hljs-number">1197</span>,<span class="hljs-number">0</span>], <span class="hljs-string">'&gt;'</span>:[<span class="hljs-number">25137</span>,<span class="hljs-number">0</span>]}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>look up to see if the current opening mathces the current closing</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">matchingClosed = {<span class="hljs-string">')'</span>:<span class="hljs-string">'('</span>, <span class="hljs-string">']'</span>:<span class="hljs-string">'['</span>, <span class="hljs-string">'}'</span>:<span class="hljs-string">'{'</span>, <span class="hljs-string">'&gt;'</span>:<span class="hljs-string">'&lt;'</span>}
+matchingOpened = {<span class="hljs-string">'('</span>:<span class="hljs-string">')'</span>, <span class="hljs-string">'['</span>:<span class="hljs-string">']'</span>, <span class="hljs-string">'{'</span>:<span class="hljs-string">'}'</span>, <span class="hljs-string">'&lt;'</span>:<span class="hljs-string">'&gt;'</span>}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>Returns a dictionary, keys are indexes of open and values are false to be set to true when mathcing close later</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getAllOpenedClosed</span><span class="hljs-params">(line, matchingClosed)</span>:</span>
+    allOpenedClosed = {}
+    <span class="hljs-keyword">for</span> idx, item <span class="hljs-keyword">in</span> enumerate(line):
+        <span class="hljs-keyword">if</span> item <span class="hljs-keyword">in</span> matchingClosed:
+            allOpenedClosed[idx] = [<span class="hljs-literal">False</span>, <span class="hljs-string">'closed'</span>, item]
+        <span class="hljs-keyword">else</span>: allOpenedClosed[idx] = [<span class="hljs-literal">False</span>, <span class="hljs-string">'opened'</span>, item]
+    <span class="hljs-keyword">return</span> allOpenedClosed
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>Checks if there is an error in any given line and updates errorCost</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">checkLineError</span><span class="hljs-params">(line, currOpened, errorCost, matchingClosed, matchingOpened, allOpenedClosed)</span>:</span>
+    <span class="hljs-keyword">for</span> idx, item <span class="hljs-keyword">in</span> enumerate(line):
+        <span class="hljs-keyword">if</span> item <span class="hljs-keyword">in</span> matchingClosed <span class="hljs-keyword">and</span> matchingClosed[item] != currOpened[<span class="hljs-number">1</span>]:
+            errorCost[item][<span class="hljs-number">1</span>] += <span class="hljs-number">1</span>
+            <span class="hljs-keyword">return</span> (<span class="hljs-literal">True</span>, errorCost)
+        <span class="hljs-keyword">elif</span> item <span class="hljs-keyword">in</span> matchingOpened:
+            currOpened = [idx, item]
+        <span class="hljs-keyword">elif</span> matchingClosed[item] == currOpened[<span class="hljs-number">1</span>]:
+            allOpenedClosed[idx][<span class="hljs-number">0</span>], allOpenedClosed[currOpened[<span class="hljs-number">0</span>]][<span class="hljs-number">0</span>] = <span class="hljs-literal">True</span>, <span class="hljs-literal">True</span>
+            <span class="hljs-keyword">while</span>(<span class="hljs-literal">True</span>):
+                <span class="hljs-keyword">if</span> line[currOpened[<span class="hljs-number">0</span>]] <span class="hljs-keyword">in</span> matchingOpened <span class="hljs-keyword">and</span> allOpenedClosed[currOpened[<span class="hljs-number">0</span>]][<span class="hljs-number">0</span>] == <span class="hljs-literal">False</span> <span class="hljs-keyword">and</span> allOpenedClosed[currOpened[<span class="hljs-number">0</span>]][<span class="hljs-number">1</span>] == <span class="hljs-string">'opened'</span>:
+                    <span class="hljs-keyword">break</span>
+                <span class="hljs-keyword">else</span>:
+                    <span class="hljs-keyword">if</span> currOpened[<span class="hljs-number">0</span>] &gt; <span class="hljs-number">0</span>:
+                        currOpened = [currOpened[<span class="hljs-number">0</span>]<span class="hljs-number">-1</span>, line[currOpened[<span class="hljs-number">0</span>]<span class="hljs-number">-1</span>]]
+                    <span class="hljs-keyword">else</span>: <span class="hljs-keyword">break</span>
+    <span class="hljs-keyword">return</span> (<span class="hljs-literal">False</span>, errorCost)
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<p>Goes through all the lines and checks if there is an error</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">checkAllLineErrors</span><span class="hljs-params">(lines, errorCost, matchingClosed, matchingOpened)</span>:</span>
+    isError = []
+    <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> lines:
+        allOpened = getAllOpenedClosed(line, matchingClosed)
+        isE, errorCost = checkLineError(line, <span class="hljs-literal">None</span>, errorCost, matchingClosed, matchingOpened, allOpened)
+        isError.append(isE)
+    <span class="hljs-keyword">return</span> isError, errorCost
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<p>Totals up all the errors</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">totalErrorCost</span><span class="hljs-params">(errorCost)</span>:</span>
+    cost = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> error <span class="hljs-keyword">in</span> errorCost:
+        cost += errorCost[error][<span class="hljs-number">0</span>] * errorCost[error][<span class="hljs-number">1</span>]
+    <span class="hljs-keyword">return</span> cost
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getNonErrorLines</span><span class="hljs-params">(lines, isError)</span>:</span>
+    nonError = []
+    <span class="hljs-keyword">for</span> idx, line <span class="hljs-keyword">in</span> enumerate(lines):
+        <span class="hljs-keyword">if</span> isError[idx] == <span class="hljs-literal">False</span>:
+            nonError.append(line)
+    <span class="hljs-keyword">return</span> nonError
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">findMissingSymbols</span><span class="hljs-params">(nonErrorLine, matchingClosed, matchingOpened)</span>:</span>
+    allOpen = []
+    <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> nonErrorLine:
+        <span class="hljs-keyword">if</span> item <span class="hljs-keyword">in</span> matchingClosed:
+            allOpen.pop(<span class="hljs-number">-1</span>)
+        <span class="hljs-keyword">else</span>: allOpen.append(item)
+    missing = reversed(allOpen)
+    missing = [matchingOpened[o] <span class="hljs-keyword">for</span> o <span class="hljs-keyword">in</span> missing]
+    <span class="hljs-keyword">return</span> missing
+            
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">findAllMissingSymbols</span><span class="hljs-params">(nonErrorLines, matchingClosed, matchingOpened)</span>:</span>
+    allClosedSymbols = []
+    <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> nonErrorLines:
+        allClosedSymbols.append(findMissingSymbols(line, matchingClosed, matchingOpened))
+    <span class="hljs-keyword">return</span> allClosedSymbols
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">calcScore</span><span class="hljs-params">(missingSymbols)</span>:</span>
+    score = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> missingSymbols:
+        score *= <span class="hljs-number">5</span>
+        <span class="hljs-keyword">if</span> item == <span class="hljs-string">')'</span>: score += <span class="hljs-number">1</span>
+        <span class="hljs-keyword">elif</span> item == <span class="hljs-string">']'</span>: score += <span class="hljs-number">2</span>
+        <span class="hljs-keyword">elif</span> item == <span class="hljs-string">'}'</span>: score += <span class="hljs-number">3</span>
+        <span class="hljs-keyword">else</span>: score += <span class="hljs-number">4</span>
+    <span class="hljs-keyword">return</span> score
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">calcAllScores</span><span class="hljs-params">(allMissingSymbols)</span>:</span>
+    scores = []
+    <span class="hljs-keyword">for</span> missingSymbol <span class="hljs-keyword">in</span> allMissingSymbols:
+        scores.append(calcScore(missingSymbol))
+    <span class="hljs-keyword">return</span> scores
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">findMiddleScore</span><span class="hljs-params">(scores)</span>:</span>
+    scores = sorted(scores)
+    <span class="hljs-keyword">return</span> scores[int((len(scores) - <span class="hljs-number">1</span>) / <span class="hljs-number">2</span>)]
+
+isError, errorCost = checkAllLineErrors(lines, errorCost, matchingClosed, matchingOpened)
+nonErrorLines = getNonErrorLines(lines, isError)
+allMissingSymbols = findAllMissingSymbols(nonErrorLines, matchingClosed, matchingOpened)
+scores = calcAllScores(allMissingSymbols)
+middleScore = findMiddleScore(scores)
+
+print(<span class="hljs-string">'The answer to part 2 is '</span>, middleScore)
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

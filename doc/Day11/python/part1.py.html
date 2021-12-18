@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>part1.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "Day11\\python\\part1.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>part1.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> pprint <span class="hljs-keyword">as</span> pp
+
+txt = <span class="hljs-string">'input'</span>
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>Reading in data and cleaning it</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">with</span> open(txt) <span class="hljs-keyword">as</span> f:
+    lines = f.readlines()
+    lines = [line.strip() <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> lines]
+    lines = [[int(item) <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> line] <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> lines]
+
+grid = np.array(lines)
+gridBool = np.zeros(grid.shape, dtype=bool)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Everybody increases at the start of each round</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">addOneToGrid</span><span class="hljs-params">(grid)</span>:</span>
+    <span class="hljs-keyword">return</span> grid + <span class="hljs-number">1</span>
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>Just simplifying keeping track of neighbours for neighbour flashing
+Finding neighbours given a specific point</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">findNeighbours</span><span class="hljs-params">(point)</span>:</span>
+    x,y = point[<span class="hljs-number">0</span>],point[<span class="hljs-number">1</span>]
+    <span class="hljs-keyword">return</span> [[x<span class="hljs-number">-1</span>,y<span class="hljs-number">-1</span>], [x<span class="hljs-number">-1</span>,y], [x<span class="hljs-number">-1</span>,y+<span class="hljs-number">1</span>], [x,y<span class="hljs-number">-1</span>], [x,y+<span class="hljs-number">1</span>], [x+<span class="hljs-number">1</span>,y<span class="hljs-number">-1</span>], [x+<span class="hljs-number">1</span>,y], [x+<span class="hljs-number">1</span>,y+<span class="hljs-number">1</span>]]
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>Finding neighbours for everyone in the grid</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">findAllNeighbours</span><span class="hljs-params">(grid)</span>:</span>
+    allNeighbours = [[[] <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(len(grid[<span class="hljs-number">0</span>]))] <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(len(grid))]
+    <span class="hljs-keyword">for</span> idx, line <span class="hljs-keyword">in</span> enumerate(grid):
+        <span class="hljs-keyword">for</span> i, item <span class="hljs-keyword">in</span> enumerate(line):
+            allNeighbours[idx][i] = findNeighbours([idx, i])
+    <span class="hljs-keyword">return</span> allNeighbours
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<p>Everybody at 9 or above increases their neighbours by 1, with tmp</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">increaseNeighboursOf9</span><span class="hljs-params">(grid, gridBool, allNeighbours)</span>:</span>
+    numberOfNines = np.count_nonzero(grid&gt;<span class="hljs-number">9</span>)
+    lstNumberOfNines = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">while</span>(numberOfNines != lstNumberOfNines):
+        <span class="hljs-keyword">for</span> idx, line <span class="hljs-keyword">in</span> enumerate(grid):
+            <span class="hljs-keyword">for</span> i, item <span class="hljs-keyword">in</span> enumerate(line):
+                <span class="hljs-keyword">if</span> item &gt; <span class="hljs-number">9</span> <span class="hljs-keyword">and</span> gridBool[idx][i] == <span class="hljs-literal">False</span>:
+                    <span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> allNeighbours[idx][i]:
+                        x,y = n[<span class="hljs-number">0</span>],n[<span class="hljs-number">1</span>]
+                        <span class="hljs-keyword">if</span> <span class="hljs-number">-1</span> &lt; x &lt; len(grid) <span class="hljs-keyword">and</span> <span class="hljs-number">-1</span> &lt; y &lt; len(grid[<span class="hljs-number">0</span>]):
+                            grid[x,y] += <span class="hljs-number">1</span>
+                    gridBool[idx, i] = <span class="hljs-literal">True</span>
+        lstNumberOfNines = numberOfNines
+        numberOfNines = np.count_nonzero(grid&gt;<span class="hljs-number">9</span>)
+    <span class="hljs-keyword">return</span> grid, gridBool
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<p>Reset everyone that is at or above 9 to 0 and sets gridBool to false and keeps count of how many flashes have occurred</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">resetGrids</span><span class="hljs-params">(grid, gridBool)</span>:</span>
+    flashes = np.count_nonzero(gridBool)
+    gridBool = np.zeros(grid.shape, dtype=bool)
+    <span class="hljs-keyword">for</span> idx, line <span class="hljs-keyword">in</span> enumerate(grid):
+        <span class="hljs-keyword">for</span> i, item <span class="hljs-keyword">in</span> enumerate(line):
+            <span class="hljs-keyword">if</span> item &gt; <span class="hljs-number">9</span>:
+                grid[idx, i] = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">return</span> grid, gridBool, flashes
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">part1</span><span class="hljs-params">(grid, gridBool, iterations)</span>:</span>
+    allNeighbours = findAllNeighbours(grid)
+    flashes = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(iterations):
+        grid = addOneToGrid(grid)
+        grid, gridBool = increaseNeighboursOf9(grid, gridBool, allNeighbours)
+        grid, gridBool, currFlashes = resetGrids(grid, gridBool)
+        flashes += currFlashes
+    <span class="hljs-keyword">return</span> grid, gridBool, flashes
+
+iterations = <span class="hljs-number">100</span>
+grid, gridBool, flashes = part1(grid, gridBool, iterations)
+
+print(<span class="hljs-string">'The answer to part 1 is '</span>,flashes)
+
+print(<span class="hljs-string">'After '</span>,iterations,<span class="hljs-string">' iterations the grid looks like:'</span>)
+pp.pprint(grid)
+
+
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

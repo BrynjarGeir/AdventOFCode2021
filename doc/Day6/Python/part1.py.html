@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>part1.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "Day6\\Python\\part1.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>part1.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+
+txt = <span class="hljs-string">'input'</span>
+<span class="hljs-keyword">with</span> open(txt) <span class="hljs-keyword">as</span> f:
+    line = f.readline()
+    line = line.split(<span class="hljs-string">','</span>)
+    <span class="hljs-keyword">for</span> idx, item <span class="hljs-keyword">in</span> enumerate(line):
+        line[idx] = int(item)
+
+fishes = np.array(line)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">oneDay</span><span class="hljs-params">(fishes)</span>:</span>
+    tmp = np.array([], dtype=int)
+    <span class="hljs-keyword">for</span> idx, val <span class="hljs-keyword">in</span> enumerate(fishes):
+        <span class="hljs-keyword">if</span> val == <span class="hljs-number">0</span>:
+            fishes[idx] = <span class="hljs-number">6</span>
+            tmp = np.append(tmp, <span class="hljs-number">8</span>)
+        <span class="hljs-keyword">else</span>:
+            fishes[idx] -= <span class="hljs-number">1</span>
+    fishes = np.append(fishes,tmp)
+    <span class="hljs-keyword">return</span> fishes
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">allDays</span><span class="hljs-params">(fishes, days)</span>:</span>
+    print(<span class="hljs-string">'Initital state '</span>,fishes)
+    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(days):
+        fishes = oneDay(fishes)
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>print('On day ',day+1,' fishes are ',fishes)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">    <span class="hljs-keyword">return</span> fishes
+
+fishes = allDays(fishes, <span class="hljs-number">256</span>)
+
+print(<span class="hljs-string">'In the end there are '</span>, len(fishes), <span class="hljs-string">' fishes'</span>)
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

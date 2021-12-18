@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>part1.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "Day9\\Python\\part1.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>part1.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> pprint <span class="hljs-keyword">as</span> pr
+
+<span class="hljs-keyword">with</span> open(<span class="hljs-string">'input'</span>) <span class="hljs-keyword">as</span> f:
+    lines = f.readlines()
+    <span class="hljs-keyword">for</span> idx, line <span class="hljs-keyword">in</span> enumerate(lines):
+        lines[idx] = list(line.strip())
+        lines[idx] = [int(item) <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> lines[idx]]
+
+lines = np.array(lines)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">checkLowPoint</span><span class="hljs-params">(point, lines)</span>:</span>
+    x,y = point[<span class="hljs-number">0</span>],point[<span class="hljs-number">1</span>]
+    <span class="hljs-keyword">if</span> x == <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> y == <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">return</span> lines[x,y] &lt; lines[x,y+<span class="hljs-number">1</span>] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x+<span class="hljs-number">1</span>,y]
+    <span class="hljs-keyword">elif</span> x == <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> y == len(lines[<span class="hljs-number">0</span>]) - <span class="hljs-number">1</span>:
+        <span class="hljs-keyword">return</span> lines[x,y] &lt; lines[x,y<span class="hljs-number">-1</span>] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x+<span class="hljs-number">1</span>,y]
+    <span class="hljs-keyword">elif</span> x == len(lines) - <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> y == <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">return</span> lines[x,y] &lt; lines[x<span class="hljs-number">-1</span>,y] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x,y+<span class="hljs-number">1</span>]
+    <span class="hljs-keyword">elif</span> x == len(lines) - <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> y == len(lines[<span class="hljs-number">0</span>]) - <span class="hljs-number">1</span>:
+        <span class="hljs-keyword">return</span> lines[x,y] &lt; lines[x<span class="hljs-number">-1</span>,y] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x,y<span class="hljs-number">-1</span>]
+    <span class="hljs-keyword">elif</span> x == <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">return</span> lines[x,y] &lt; lines[x,y<span class="hljs-number">-1</span>] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x,y+<span class="hljs-number">1</span>] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x+<span class="hljs-number">1</span>,y]
+    <span class="hljs-keyword">elif</span> x == len(lines) - <span class="hljs-number">1</span>:
+        <span class="hljs-keyword">return</span> lines[x,y] &lt; lines[x<span class="hljs-number">-1</span>,y] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x,y<span class="hljs-number">-1</span>] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x,y+<span class="hljs-number">1</span>]
+    <span class="hljs-keyword">elif</span> y == <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">return</span> lines[x,y] &lt; lines[x,y+<span class="hljs-number">1</span>] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x<span class="hljs-number">-1</span>,y] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x+<span class="hljs-number">1</span>,y]
+    <span class="hljs-keyword">elif</span> y == len(lines[<span class="hljs-number">0</span>]) - <span class="hljs-number">1</span>:
+        <span class="hljs-keyword">return</span> lines[x,y] &lt; lines[x,y<span class="hljs-number">-1</span>] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x<span class="hljs-number">-1</span>,y] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x+<span class="hljs-number">1</span>,y]
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span> lines[x,y] &lt; lines[x,y<span class="hljs-number">-1</span>] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x<span class="hljs-number">-1</span>,y] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x+<span class="hljs-number">1</span>,y] <span class="hljs-keyword">and</span> lines[x,y] &lt; lines[x,y+<span class="hljs-number">1</span>]
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">findLowPoints</span><span class="hljs-params">(lines)</span>:</span>
+    lowPoints = set()
+    <span class="hljs-keyword">for</span> idx, line <span class="hljs-keyword">in</span> enumerate(lines):
+        <span class="hljs-keyword">for</span> i, val <span class="hljs-keyword">in</span> enumerate(line):
+            curr = checkLowPoint((idx,i), lines)
+            <span class="hljs-keyword">if</span> curr: lowPoints.add((idx, i))
+    <span class="hljs-keyword">return</span> lowPoints
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">findRiskLevel</span><span class="hljs-params">(point)</span>:</span>
+    x, y = point[<span class="hljs-number">0</span>], point[<span class="hljs-number">1</span>]
+    <span class="hljs-keyword">return</span> lines[x,y] + <span class="hljs-number">1</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">findAllRiskLevels</span><span class="hljs-params">(points)</span>:</span>
+    allRiskLevels = []
+    <span class="hljs-keyword">for</span> point <span class="hljs-keyword">in</span> points:
+        allRiskLevels.append(findRiskLevel(point))
+    <span class="hljs-keyword">return</span> allRiskLevels
+
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">part1</span><span class="hljs-params">(lines)</span>:</span>
+    lowPoints = findLowPoints(lines)
+    allRiskLevels = findAllRiskLevels(lowPoints)
+    <span class="hljs-keyword">return</span> sum(allRiskLevels)
+
+print(<span class="hljs-string">'Answer to part 1 is : '</span>, part1(lines))
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

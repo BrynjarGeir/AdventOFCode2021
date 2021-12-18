@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>part2.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "Day8\\python\\part2.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>part2.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">import</span> pprint
+
+txt = <span class="hljs-string">'input'</span>
+<span class="hljs-keyword">with</span> open(txt) <span class="hljs-keyword">as</span> f:
+    lines = f.readlines()
+    <span class="hljs-keyword">for</span> idx, line <span class="hljs-keyword">in</span> enumerate(lines):
+        lines[idx] = line.split(<span class="hljs-string">' | '</span>)
+        lines[idx][<span class="hljs-number">0</span>] = lines[idx][<span class="hljs-number">0</span>].split()
+        lines[idx][<span class="hljs-number">1</span>] = lines[idx][<span class="hljs-number">1</span>].split()
+
+lines = lines
+
+dA = {<span class="hljs-number">0</span>:<span class="hljs-number">6</span>, <span class="hljs-number">1</span>:<span class="hljs-number">2</span>, <span class="hljs-number">2</span>:<span class="hljs-number">5</span>, <span class="hljs-number">3</span>:<span class="hljs-number">5</span>, <span class="hljs-number">4</span>:<span class="hljs-number">4</span>, <span class="hljs-number">5</span>:<span class="hljs-number">5</span>, <span class="hljs-number">6</span>:<span class="hljs-number">6</span>, <span class="hljs-number">7</span>:<span class="hljs-number">3</span>, <span class="hljs-number">8</span>:<span class="hljs-number">7</span>, <span class="hljs-number">9</span>:<span class="hljs-number">6</span>}
+dU = {<span class="hljs-number">1</span>:<span class="hljs-number">2</span>, <span class="hljs-number">4</span>:<span class="hljs-number">4</span>, <span class="hljs-number">7</span>:<span class="hljs-number">3</span>, <span class="hljs-number">8</span>:<span class="hljs-number">7</span>}
+pos = {<span class="hljs-number">0</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">1</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">2</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">3</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">4</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">5</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">6</span>:<span class="hljs-literal">None</span>}
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getLen</span><span class="hljs-params">(line)</span>:</span>
+    <span class="hljs-keyword">return</span> [len(item) <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> line]
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">decipherNumbers</span><span class="hljs-params">(line)</span>:</span>
+    numbers = {<span class="hljs-number">0</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">1</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">2</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">3</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">4</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">5</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">6</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">7</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">8</span>:<span class="hljs-literal">None</span>, <span class="hljs-number">9</span>:<span class="hljs-literal">None</span>}
+    lengths = [len(item) <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> line[<span class="hljs-number">0</span>]]
+    <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> dU:
+        <span class="hljs-keyword">if</span> dU[key] <span class="hljs-keyword">in</span> lengths:
+            numbers[key] = set(line[<span class="hljs-number">0</span>][lengths.index(dU[key])])
+    pos[<span class="hljs-number">0</span>] = (numbers[<span class="hljs-number">7</span>] - numbers[<span class="hljs-number">1</span>]).pop()
+    idx = [i <span class="hljs-keyword">for</span> i,d <span class="hljs-keyword">in</span> enumerate(lengths) <span class="hljs-keyword">if</span> d==<span class="hljs-number">6</span>]
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> idx:
+        curr = set(line[<span class="hljs-number">0</span>][i]) - numbers[<span class="hljs-number">7</span>] - numbers[<span class="hljs-number">4</span>]
+        <span class="hljs-keyword">if</span> len(curr) == <span class="hljs-number">1</span>:
+            tmp = idx.index(i)
+            idx.pop(tmp) 
+            pos[<span class="hljs-number">3</span>] = curr.pop()
+    curr = set(line[<span class="hljs-number">0</span>][idx[<span class="hljs-number">0</span>]]) - numbers[<span class="hljs-number">7</span>] - numbers[<span class="hljs-number">4</span>]
+    pos[<span class="hljs-number">4</span>] = (curr - set(pos[<span class="hljs-number">3</span>])).pop()
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>Should now be able to make 0,6,9</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">    numbers[<span class="hljs-number">9</span>] = numbers[<span class="hljs-number">8</span>] - set(pos[<span class="hljs-number">4</span>])
+    <span class="hljs-keyword">if</span> numbers[<span class="hljs-number">1</span>].issubset(set(line[<span class="hljs-number">0</span>][idx[<span class="hljs-number">0</span>]])):
+        numbers[<span class="hljs-number">0</span>] = set(line[<span class="hljs-number">0</span>][idx[<span class="hljs-number">0</span>]])
+        numbers[<span class="hljs-number">6</span>] = set(line[<span class="hljs-number">0</span>][idx[<span class="hljs-number">1</span>]])
+    <span class="hljs-keyword">else</span>:
+        numbers[<span class="hljs-number">0</span>] = set(line[<span class="hljs-number">0</span>][idx[<span class="hljs-number">1</span>]])
+        numbers[<span class="hljs-number">6</span>] = set(line[<span class="hljs-number">0</span>][idx[<span class="hljs-number">0</span>]])
+    pos[<span class="hljs-number">1</span>] = (numbers[<span class="hljs-number">0</span>] - numbers[<span class="hljs-number">6</span>]).pop()
+    pos[<span class="hljs-number">2</span>] = (numbers[<span class="hljs-number">1</span>] - set(pos[<span class="hljs-number">1</span>])).pop()
+    pos[<span class="hljs-number">5</span>] = (numbers[<span class="hljs-number">8</span>] - numbers[<span class="hljs-number">0</span>]).pop()
+    numbers[<span class="hljs-number">2</span>] = set(pos[<span class="hljs-number">0</span>]+pos[<span class="hljs-number">1</span>]+pos[<span class="hljs-number">5</span>]+pos[<span class="hljs-number">4</span>]+pos[<span class="hljs-number">3</span>])
+    pos[<span class="hljs-number">6</span>] = (numbers[<span class="hljs-number">8</span>] - numbers[<span class="hljs-number">2</span>] - numbers[<span class="hljs-number">1</span>]).pop()
+    numbers[<span class="hljs-number">3</span>] = set(pos[<span class="hljs-number">0</span>]+pos[<span class="hljs-number">1</span>]+pos[<span class="hljs-number">2</span>]+pos[<span class="hljs-number">3</span>]+pos[<span class="hljs-number">5</span>])
+    numbers[<span class="hljs-number">5</span>] = set(pos[<span class="hljs-number">0</span>]+pos[<span class="hljs-number">2</span>]+pos[<span class="hljs-number">3</span>]+pos[<span class="hljs-number">5</span>]+pos[<span class="hljs-number">6</span>])
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>All numbers should be ok</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">    <span class="hljs-keyword">return</span> numbers
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">decipherTarget</span><span class="hljs-params">(line, numbers)</span>:</span>
+    target = [set(item) <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> line[<span class="hljs-number">1</span>]]
+    keys = []
+    <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> target:
+        <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> numbers.keys():
+            <span class="hljs-keyword">if</span> item == numbers[key]:
+                keys.append(key)
+    <span class="hljs-keyword">return</span> keys
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getCurrentSum</span><span class="hljs-params">(keys)</span>:</span>
+    val = <span class="hljs-string">''</span>
+    <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> keys:
+        val += str(key)
+    <span class="hljs-keyword">return</span> int(val)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getTotalSum</span><span class="hljs-params">(lines)</span>:</span>
+    totalSum = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> lines:
+        numbers = decipherNumbers(line)
+        keys = decipherTarget(line, numbers)
+        totalSum += getCurrentSum(keys)
+    <span class="hljs-keyword">return</span> totalSum
+
+print(getTotalSum(lines))
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>
