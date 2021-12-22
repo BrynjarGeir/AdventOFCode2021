@@ -1,5 +1,7 @@
 ########## Imports and other setup ############
 
+import time
+
 ########## Preparing data ##############
 
 target = open('../data/input').read().split(': ')[1].split(', ')
@@ -42,12 +44,15 @@ def checkIfVelWorks(vel):
 
 def checkForRangesOfVels():
     doVelWork = []
-    for y in range(-400,400):
-        for x in range(1,400):
+    for y in range(-125,125):
+        for x in range(1,233):
             currVel, b = checkIfVelWorks((x,y))
             if b: doVelWork.append(currVel)
     return doVelWork
 
+prevTime = time.time()
 velsWork = checkForRangesOfVels()
 
 print(len(velsWork))
+
+print(time.time() - prevTime)
