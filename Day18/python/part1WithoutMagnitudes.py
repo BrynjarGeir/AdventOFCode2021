@@ -1,8 +1,6 @@
 from ast import literal_eval as l_eval
 from collections import deque
-from math import ceil, floor, comb
-from itertools import permutations
-import pprint as p
+from math import ceil, floor
 
 data = open('../data/input').readlines()
 data = [l_eval(d.strip()) for d in data]
@@ -68,6 +66,7 @@ def getLeafNodesLTR(root, leafNodes = None):
         if root.left != None: getLeafNodesLTR(root.left, leafNodes)
         if root.right != None: getLeafNodesLTR(root.right, leafNodes)
     return leafNodes
+
 #Find the max depth of a certain tree
 def getMaxDepth(node):
     if node.left == None and node.right == None: return -1
@@ -81,10 +80,6 @@ def addition(rootNodes):
     pair = Node(); pair.left = pair1; pair.right = pair2
     rootNodes.appendleft(pair)
     return rootNodes
-#Join two trees
-def singleAddition(pair1, pair2):
-    rootNode = Node(); rootNode.left = pair1; rootNode.right = pair2
-    return rootNode
 #Explode a pair that is nested 4 times
 def explodePair(pair, currRoot):
     leafNodes = getLeafNodesLTR(currRoot)
@@ -114,19 +109,11 @@ def populateAllTrees(data):
         populateTree(currRoot, line)
     return rootNodes
 #Calculate the magnitude of the final tree recursively
-def calculateMagnitude(finalRootNode):
-    while finalRootNode.left != None or finalRootNode.right != None:
-        leafNodes = getLeafNodesLTR(finalRootNode)
-        for leafNode in leafNodes:
-            parent = findParent(finalRootNode, leafNode)
-            if parent == None: continue
-            if type(parent.left.data) == int and type(parent.right.data) == int:
-                magnitude = 3*parent.left.data + 2*parent.right.data
-                parent.left = None; parent.right = None; parent.data = magnitude
-    return finalRootNode
+#def calculateMagnitude(finalRootNode):
+
 #Solve part1 by adding them together line by line and then checking if
 #I need to explode or split
-def getFinalRoot(data):
+def solvePart1(data):
     rootNodes = populateAllTrees(data)
     while len(rootNodes) > 1:
         rootNodes = addition(rootNodes)
@@ -145,44 +132,7 @@ def getFinalRoot(data):
                 continue
             break
     return rootNodes
-#Maybe I can find the solution simply by checking which two lines produce the highest final number
-#then adding those two together, explode, split and stuff and find magnitude? Did not work
-def findEachLineMagnitude(rootNodes): return [calculateMagnitude(rootNode).data for rootNode in rootNodes]
-#Now I've only got to explode and split stuff for one tree at a time, not work my way through all the trees
-def simpleReduction(rootNode):
-    while True:
-        if getMaxDepth(rootNode) >= 4:
-            leaf = deepestLeftMostNode(rootNode)
-            explNode = findParent(rootNode, leaf)
-            leafNodes = getLeafNodesLTR(rootNode)
-            explodePair(explNode, rootNode)
-            continue
-        leafNodes = getLeafNodesLTR(rootNode)
-        if max(leafNode.data for leafNode in leafNodes) > 9:
-            values = [leafNode.data for leafNode in leafNodes]
-            idx = next(i for i, value in enumerate(values) if value > 9)
-            split(leafNodes[idx])
-            continue
-        break
-    return rootNode
-#Now I have to calculate the final number of each permutation. I don't have to keep track of the nodes just the final values
-def calcPermutationsMagnitude(permutations):
-    magnitudes = []
-    for permutation in permutations:
-        magnitudes.append(calculateMagnitude(permutation))
-    return magnitudes
-#Get the highest possible magnitude
-def getMaxMagnitude(magnitudes): return max([magnitude.data for magnitude in magnitudes])
-#For all the permutations get the final root
-def getPermFinalRoot(dataPermutations): return [getFinalRoot(perm)[0] for perm in dataPermutations]
-#Populate all trees, don't need to add and explode them all
-#Ok what if I just modify the getFinalRoot so that I put in the permutation roots?
-#So instead of finding all the possible permutations of the root nodes I just find all the 2 permutations of the lines?
-#Then I would just need the 2-permutations for that and I'll be good to go, right?
-dataPermutations = list(permutations(data, 2))
 
-permRoots = getPermFinalRoot(dataPermutations)
+finalRootNode = solvePart1(data)
 
-magnitudes = [calculateMagnitude(perm).data for perm in permRoots]
-
-print(max(magnitudes))
+print(len(finalRootNode))
