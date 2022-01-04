@@ -185,9 +185,9 @@ if part_one:
     current_state.rooms[7].pos = [D, A]
 # Part 2
 else:
-    current_state.rooms[1].pos = [B, D, D, A]
-    current_state.rooms[3].pos = [C, C, B, D]
-    current_state.rooms[5].pos = [B, B, A, C]
+    current_state.rooms[1].pos = [D, D, D, B]
+    current_state.rooms[3].pos = [A, C, B, C]
+    current_state.rooms[5].pos = [C, B, A, B]
     current_state.rooms[7].pos = [D, A, C, A]
 
 HALLWAY_IND = [0, 2, 4, 6, 8]
